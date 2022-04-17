@@ -1,5 +1,6 @@
 import express from 'express'
 import path from 'path'
+import config from './config'
 
 import router from './routes'
 
@@ -7,7 +8,7 @@ import router from './routes'
 const app = express()
 
 // Express configuration
-app.set('port', process.env.PORT || 3000)
+app.set('port', config.PORT)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '../public')))

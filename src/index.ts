@@ -1,12 +1,10 @@
-import 'dotenv/config'
 import app from './app'
 import mongoose from 'mongoose'
+import config from './config'
 
 /**
  * Start Express server.
  */
-
-const MONGO_DB_URI = <string> process.env.MONGO_DB_URI
 
 const startServer = () => {
   app.listen(app.get('port'), () => {
@@ -17,7 +15,7 @@ const startServer = () => {
   })
 }
 
-mongoose.connect(MONGO_DB_URI)
+mongoose.connect(config.MONGO_DB_URI)
   .then(() => {
     console.log('  Mongodb connected correctly!')
     startServer()

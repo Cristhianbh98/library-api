@@ -14,7 +14,11 @@ const userSchema = new Schema<IUser>({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator: (username: string) => /^[A-Za-z0-9]+$/.test(username),
+      message: (props: any) => `${props.value} is not a valid username!`
+    }
   },
   email: {
     type: String,
