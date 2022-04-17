@@ -23,10 +23,7 @@ async function store (req: Request, res: Response, next: NextFunction) {
     await userService.store(user)
     return res.send({ message: 'User created correctly', status: 200 }).status(200)
   } catch (e: any) {
-    const err = new Error()
-    err.message = e.message
-    err.name = 'ValidationError'
-    next(err)
+    next(e)
   }
 }
 
