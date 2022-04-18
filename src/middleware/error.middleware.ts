@@ -4,7 +4,8 @@ const ERROR_HANDLERS = {
   defaultError: (res: Response, err: Error) => res.status(400).send({ status: 400, error: err.message }),
   JsonWebTokenError: (res: Response, err: Error) => res.status(401).send({ status: 401, error: err.message }),
   ValidationError: (res: Response, err: Error) => res.status(409).send({ status: 409, error: err.message }),
-  EntityNotFound: (res: Response, err: Error) => res.status(404).send({ status: 404, error: err.message })
+  EntityNotFound: (res: Response, err: Error) => res.status(404).send({ status: 404, error: err.message }),
+  InvalidToken: (res: Response, err: Error) => res.status(400).send({ status: 400, isValid: false, error: err.message })
 }
 
 type ErrorHandleKeys = keyof typeof ERROR_HANDLERS

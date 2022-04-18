@@ -20,12 +20,17 @@ async function destroy (id: string) {
   return await userModel.findByIdAndDelete(id)
 }
 
+async function findByEmail (email: string) {
+  return await userModel.findOne({ email })
+}
+
 const userRepository = {
   index,
   show,
   store,
   update,
-  destroy
+  destroy,
+  findByEmail
 }
 
 export default userRepository

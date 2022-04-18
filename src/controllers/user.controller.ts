@@ -43,8 +43,25 @@ function destroy (req: Request, res: Response) {
   return res.send()
 }
 
-function login (req: Request, res: Response) {
-  return res.send('Here it will be the login')
+async function login (req: Request, res: Response, next: NextFunction) {
+  const { email, password } = req.body
+  try {
+    const data = await userService.login(email, password)
+    return res.send(data).status(200)
+  } catch (e: any) {
+    next(e)
+  }
+}
+
+async function verifyToken (req: Request, res: Response, next: NextFunction) {
+  const { token } = req.body
+  try {
+    const user = userService.verifyToken(token)
+    return res.send({ isValid: user instanceof Object }).status(200)
+  } catch (e: any) {
+    e.name = 'InvalidToken'
+    next(e)
+  }
 }
 
 const userController = {
@@ -53,7 +70,8 @@ const userController = {
   store,
   update,
   destroy,
-  login
+  login,
+  verifyToken
 }
 
 export default userController

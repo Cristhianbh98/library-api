@@ -8,6 +8,7 @@ router.get('/:id', userController.show)
 
 router.post('/', userController.store)
 router.post('/login', userController.login)
+router.post('/verifyToken', userController.verifyToken)
 
 router.put('/:id', userController.update)
 
