@@ -10,13 +10,20 @@ async function index (req: Request, res: Response) {
   let users = []
 
   if (role === 'admin') users = await userService.index()
-  else users = await userService.indexAdmins()
+  else users = await userService.indexAdmin()
 
   return res.status(200).send(users)
 }
 
-function show (req: Request, res: Response) {
-  return res.send({ message: 'Here will go a single user' })
+async function show (req: Request, res: Response) {
+  const { id } = req.params
+  let user
+  if (res.locals.currentUser?.role === 'admin') {
+    user = await userService.show(id)
+  } else {
+    user = await userService.showAdmin(id)
+  }
+  return res.status(200).send(user)
 }
 
 async function store (req: Request, res: Response, next: NextFunction) {
@@ -67,6 +74,18 @@ async function verifyToken (req: Request, res: Response, next: NextFunction) {
   return res.send({ isValid })
 }
 
+async function emailExists (req: Request, res: Response, next: NextFunction) {
+  const { email } = req.body
+  const isTaken = await userService.emailExists(email)
+  return res.send({ isTaken })
+}
+
+async function usernameExists (req: Request, res: Response, next: NextFunction) {
+  const { username } = req.body
+  const isTaken = await userService.usernameExists(username)
+  return res.send({ isTaken })
+}
+
 const userController = {
   index,
   show,
@@ -74,7 +93,9 @@ const userController = {
   update,
   destroy,
   login,
-  verifyToken
+  verifyToken,
+  emailExists,
+  usernameExists
 }
 
 export default userController

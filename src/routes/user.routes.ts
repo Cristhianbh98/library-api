@@ -6,11 +6,13 @@ import getUserMiddleware from '../middlewares/getUser.middleware'
 const router = Router()
 
 router.get('/', getUserMiddleware, userController.index)
-router.get('/:id', userController.show)
+router.get('/:id', getUserMiddleware, userController.show)
 
 router.post('/', userController.store)
 router.post('/login', userController.login)
 router.post('/verifyToken', userController.verifyToken)
+router.post('/emailExists', userController.emailExists)
+router.post('/usernameExists', userController.usernameExists)
 
 router.put('/:id', authMiddleware, userController.update)
 
