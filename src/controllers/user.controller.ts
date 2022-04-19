@@ -1,10 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
-import userService from '../servicies/user.services'
-import { trimString } from '../helpers/validation.helper'
 import config from '../config'
+import { trimString } from '../helpers/validation.helper'
+import userService from '../servicies/user.service'
+import authService from '../servicies/auth.service'
 
-function index (req: Request, res: Response) {
-  return res.send({ route: 'Here it will show all the users for admin' })
+async function index (req: Request, res: Response) {
+  const role = res.locals.currentUser?.role || 'subscriber'
+
+  let users = []
+
+  if (role === 'admin') users = await userService.index()
+  else users = await userService.indexAdmins()
+
+  return res.status(200).send(users)
 }
 
 function show (req: Request, res: Response) {
@@ -29,14 +37,14 @@ async function store (req: Request, res: Response, next: NextFunction) {
 
   try {
     await userService.store(user)
-    return res.send({ message: 'User created correctly', status: 200 }).status(200)
+    return res.send({ message: 'User created correctly', status: 200 })
   } catch (e: any) {
     next(e)
   }
 }
 
 function update (req: Request, res: Response) {
-  return res.send({ message: 'Uptade user' })
+  return res.send(res.locals.currentUser)
 }
 
 function destroy (req: Request, res: Response) {
@@ -46,8 +54,8 @@ function destroy (req: Request, res: Response) {
 async function login (req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body
   try {
-    const data = await userService.login(email, password)
-    return res.send(data).status(200)
+    const data = await authService.login(email, password)
+    return res.send(data)
   } catch (e: any) {
     next(e)
   }
@@ -55,13 +63,8 @@ async function login (req: Request, res: Response, next: NextFunction) {
 
 async function verifyToken (req: Request, res: Response, next: NextFunction) {
   const { token } = req.body
-  try {
-    const user = userService.verifyToken(token)
-    return res.send({ isValid: user instanceof Object }).status(200)
-  } catch (e: any) {
-    e.name = 'InvalidToken'
-    next(e)
-  }
+  const isValid = authService.verifyToken(token)
+  return res.send({ isValid })
 }
 
 const userController = {

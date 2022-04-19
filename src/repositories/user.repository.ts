@@ -24,13 +24,18 @@ async function findByEmail (email: string) {
   return await userModel.findOne({ email })
 }
 
+async function indexAdmins () {
+  return await userModel.find({ role: 'admin' })
+}
+
 const userRepository = {
   index,
   show,
   store,
   update,
   destroy,
-  findByEmail
+  findByEmail,
+  indexAdmins
 }
 
 export default userRepository
