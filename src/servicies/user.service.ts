@@ -16,6 +16,14 @@ async function store (user: object) {
   return await userRepository.store(user)
 }
 
+async function update (id: string, user: object) {
+  return await userRepository.update(id, user)
+}
+
+async function destroy (id: string) {
+  return await userRepository.destroy(id)
+}
+
 async function indexAdmin () {
   return await userRepository.indexAdmin()
 }
@@ -47,9 +55,11 @@ async function usernameExists (username: string) {
 }
 
 const userService = {
-  store,
-  show,
   index,
+  show,
+  store,
+  update,
+  destroy,
   emailExists,
   usernameExists,
   indexAdmin,

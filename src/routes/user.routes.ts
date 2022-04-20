@@ -16,6 +16,6 @@ router.post('/usernameExists', userController.usernameExists)
 
 router.put('/:id', authMiddleware, userController.update)
 
-router.delete('/:id', userController.destroy)
+router.delete('/:id', authMiddleware, userController.destroy)
 
 export default router

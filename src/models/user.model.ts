@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose'
-const { hashSync, genSaltSync } = require('bcryptjs')
+import { hashSync, genSaltSync } from 'bcryptjs'
+import md5 from 'md5'
 
 interface IUser {
   username: string
@@ -50,6 +51,8 @@ const userSchema = new Schema<IUser>({
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
+    const hash = md5(returnedObject.email)
+    returnedObject.image = 'https://www.gravatar.com/avatar/' + hash
     returnedObject.id = returnedObject._id
     delete returnedObject._id
     delete returnedObject.__v
@@ -62,6 +65,26 @@ userSchema.pre('save', function (next) {
   const salt = genSaltSync(10)
   const passwordHashed = hashSync(user.password, salt)
   user.password = passwordHashed
+  next()
+})
+
+userSchema.pre('findOneAndUpdate', function (next) {
+  // @ts-ignore: Unreachable code error
+  const { password } = this._update
+
+  if (password === undefined) {
+    // @ts-ignore: Unreachable code error
+    delete this._update.password
+  } else {
+    if (!/^.{12,50}$/.test(password)) {
+      const msg = 'Not valid password sent, the password must be between 12 and 50 got {' + password + '}'
+      throw new Error(msg)
+    }
+    const salt = genSaltSync(10)
+    const passwordHashed = hashSync(password, salt)
+    // @ts-ignore: Unreachable code error
+    this._update.password = passwordHashed
+  }
   next()
 })
 

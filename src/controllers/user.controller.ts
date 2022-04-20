@@ -50,12 +50,51 @@ async function store (req: Request, res: Response, next: NextFunction) {
   }
 }
 
-function update (req: Request, res: Response) {
-  return res.send(res.locals.currentUser)
+async function update (req: Request, res: Response, next: NextFunction) {
+  const { currentUser } = res.locals
+  const { id } = req.params
+  const canEdit = currentUser?.id === id || currentUser?.role === 'admin'
+
+  if (!canEdit) {
+    const err = new Error('JsonWebTokenError')
+    err.message = 'You do not have the permisson'
+    return next(err)
+  }
+
+  const { email, firstName, lastName, password } = req.body
+
+  const updateData = {
+    email: trimString(email),
+    firstName: trimString(firstName),
+    lastName: trimString(lastName),
+    password
+  }
+
+  try {
+    await userService.update(id, updateData)
+    return res.send({ message: 'Successfully updated!' })
+  } catch (e: any) {
+    next(e)
+  }
 }
 
-function destroy (req: Request, res: Response) {
-  return res.send()
+async function destroy (req: Request, res: Response, next: NextFunction) {
+  const { currentUser } = res.locals
+  const { id } = req.params
+  const canDelete = currentUser?.id === id || currentUser?.role === 'admin'
+
+  if (!canDelete) {
+    const err = new Error('JsonWebTokenError')
+    err.message = 'You do not have the permisson'
+    return next(err)
+  }
+
+  try {
+    await userService.destroy(id)
+    return res.send({ message: 'User successfully deleted!' })
+  } catch (e: any) {
+    next(e)
+  }
 }
 
 async function login (req: Request, res: Response, next: NextFunction) {
