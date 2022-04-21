@@ -11,7 +11,7 @@ interface IUser {
   role: string
 }
 
-const userSchema = new Schema<IUser>({
+const userFields = {
   username: {
     type: String,
     required: true,
@@ -47,7 +47,9 @@ const userSchema = new Schema<IUser>({
   role: {
     type: String
   }
-})
+}
+
+const userSchema = new Schema<IUser>(userFields, { timestamps: true })
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -88,5 +90,4 @@ userSchema.pre('findOneAndUpdate', function (next) {
   next()
 })
 
-const userModel = model('user', userSchema)
-export default userModel
+export default model('user', userSchema)

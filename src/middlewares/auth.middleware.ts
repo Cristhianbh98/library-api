@@ -5,7 +5,7 @@ import userService from '../servicies/user.service'
 export default async function (req: Request, res: Response, next: NextFunction) {
   const authorization = req.get('authorization') || ''
   const token = authorization.substring(7)
-  const isValid = authService.verifyToken(<string>token)
+  const isValid = await authService.verifyToken(<string>token)
 
   if (!isValid) {
     const data = {

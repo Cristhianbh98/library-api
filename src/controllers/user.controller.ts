@@ -109,7 +109,7 @@ async function login (req: Request, res: Response, next: NextFunction) {
 
 async function verifyToken (req: Request, res: Response, next: NextFunction) {
   const { token } = req.body
-  const isValid = authService.verifyToken(token)
+  const isValid = await authService.verifyToken(token)
   return res.send({ isValid })
 }
 

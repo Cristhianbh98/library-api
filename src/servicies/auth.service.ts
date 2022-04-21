@@ -5,10 +5,13 @@ import userRepository from '../repositories/user.repository'
 
 const { JWT_KEY } = config
 
-function verifyToken (token: string) {
+async function verifyToken (token: string) {
   try {
     const decoded = jwt.verify(token, <string>JWT_KEY)
-    return decoded instanceof Object
+    // @ts-ignore: Unreachable code error
+    const { userId } = decoded
+    const user = await userRepository.show(userId)
+    return user instanceof Object
   } catch (e:any) {
     return false
   }
