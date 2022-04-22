@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose'
+import { model, Schema, SchemaDefinition } from 'mongoose'
 import { hashSync, genSaltSync } from 'bcryptjs'
 import md5 from 'md5'
 
@@ -11,7 +11,7 @@ interface IUser {
   role: string
 }
 
-const userFields = {
+const definition: SchemaDefinition = {
   username: {
     type: String,
     required: true,
@@ -49,7 +49,7 @@ const userFields = {
   }
 }
 
-const userSchema = new Schema<IUser>(userFields, { timestamps: true })
+const userSchema = new Schema<IUser>(definition, { timestamps: true })
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {

@@ -1,11 +1,11 @@
-import { model, Schema, Document } from 'mongoose'
+import { model, Schema, HydratedDocument, SchemaDefinition } from 'mongoose'
 
 interface ICategory {
   name: string,
   description: string,
 }
 
-const categoryFields = {
+const definition: SchemaDefinition = {
   name: {
     type: String,
     required: true
@@ -13,11 +13,12 @@ const categoryFields = {
   description: String
 }
 
-const categorySchema = new Schema<ICategory>(categoryFields, { timestamps: true })
+const categorySchema = new Schema<ICategory>(definition, { timestamps: true })
 
 categorySchema.set('toJSON', {
-  transform: (doc, ret: Document<ICategory>) => {
+  transform: (doc, ret: HydratedDocument<ICategory>) => {
     ret.id = ret._id
+    // @ts-ignore: Unreachable code error
     delete ret._id
     delete ret.__v
   }

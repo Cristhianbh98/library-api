@@ -8,12 +8,12 @@ async function show (id: string) {
   return await categoryModel.findById(id)
 }
 
-async function store (user: object) {
-  return await categoryModel.create(user)
+async function store (category: object) {
+  return await categoryModel.create(category)
 }
 
-async function update (id: string, user: object) {
-  return await categoryModel.findByIdAndUpdate(id, user, { new: true })
+async function update (id: string, category: object) {
+  return await categoryModel.findByIdAndUpdate(id, category, { new: true })
 }
 
 async function destroy (id: string) {

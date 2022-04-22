@@ -4,8 +4,4 @@ export function trimString (value: any) {
   return typeof value !== 'string' ? value : value.trim()
 }
 
-const validationHelper = {
-  trimString
-}
-
-export default validationHelper
+export default { trimString }
