@@ -6,6 +6,8 @@ const router = Router()
 
 router.get('/', bookController.index)
 router.get('/:id', bookController.show)
+router.get('/category/:category', bookController.indexByCategory)
+router.get('/user/:user', bookController.indexByUser)
 
 router.post('/', authMiddleware, bookController.store)
 

@@ -123,10 +123,33 @@ async function destroy (req: Request, res: Response, next: NextFunction) {
   }
 }
 
+async function indexByCategory (req: Request, res: Response, next: NextFunction) {
+  const { category } = req.params
+
+  try {
+    const books = await bookService.indexByCategory(category)
+    return res.send(books)
+  } catch (e:any) {
+    next(e)
+  }
+}
+
+async function indexByUser (req: Request, res: Response, next: NextFunction) {
+  const { user } = req.params
+  try {
+    const books = await bookService.indexByUser(user)
+    return res.send(books)
+  } catch (e:any) {
+    next(e)
+  }
+}
+
 export default {
   index,
   show,
   store,
   update,
-  destroy
+  destroy,
+  indexByCategory,
+  indexByUser
 }

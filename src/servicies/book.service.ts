@@ -88,10 +88,20 @@ async function destroy (id: string) {
   return book
 }
 
+async function indexByCategory (category: string) {
+  return await bookRepository.indexByCategory(category)
+}
+
+async function indexByUser (user: string) {
+  return await bookRepository.indexByUser(user)
+}
+
 export default {
   index,
   show,
   store,
   update,
-  destroy
+  destroy,
+  indexByCategory,
+  indexByUser
 }
