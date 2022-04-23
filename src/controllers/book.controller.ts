@@ -14,7 +14,7 @@ async function show (req: Request, res: Response) {
 }
 
 async function store (req: Request, res: Response, next: NextFunction) {
-  const { title, description, code, category, user } = req.body
+  const { title, description, code, category } = req.body
   const image = <any>req.files?.image
   const document = <any>req.files?.document
 
@@ -46,7 +46,7 @@ async function store (req: Request, res: Response, next: NextFunction) {
     description: trimString(description),
     code: trimString(code),
     category,
-    user
+    user: res.locals.currentUser?.id
   }
   try {
     const bookCreated = await bookService.store(book, files)
@@ -61,7 +61,22 @@ async function update (req: Request, res: Response, next: NextFunction) {
 }
 
 async function destroy (req: Request, res: Response, next: NextFunction) {
-  return res.send('This is the destroy function')
+  const { currentUser } = res.locals
+  const { id } = req.params
+  const canDelete = currentUser?.id === id || currentUser?.role === 'admin'
+
+  if (!canDelete) {
+    const err = new Error('JsonWebTokenError')
+    err.message = 'You do not have the permisson'
+    return next(err)
+  }
+
+  try {
+    await bookService.destroy(id)
+    return res.send({ message: 'successfully deleted' })
+  } catch (e: any) {
+    next(e)
+  }
 }
 
 export default {

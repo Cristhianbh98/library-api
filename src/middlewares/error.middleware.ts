@@ -12,7 +12,7 @@ type ErrorHandleKeys = keyof typeof ERROR_HANDLERS
 
 function errorMiddleware (err: Error, req: Request, res: Response, next: NextFunction) {
   if (err) {
-    console.log(err.name)
+    console.log(err)
     const errorName = <ErrorHandleKeys> err.name
     const handler = ERROR_HANDLERS[errorName] || ERROR_HANDLERS.defaultError
     return handler(res, err)
