@@ -39,7 +39,36 @@ async function store (book: object, files: any) {
   return await bookRepository.update(bookCreated.id, bookCreated)
 }
 
-async function update (id: string, book: object) {
+async function update (id: string, book: any, files: any) {
+  const bookToUpdate = await bookRepository.show(id)
+  if (files.image) {
+    const image = files.image
+    const imageHandle = bookToUpdate?.image.handle
+    const imageRequest = storage.upload(image?.data, {}, { filename: image.md5 })
+    const imageDeleteRequest = storage.remove(<string>imageHandle)
+    const [imageUpload] = await Promise.all([imageRequest, imageDeleteRequest])
+    book.image = {
+      url: imageUpload.url,
+      name: imageUpload._file.name,
+      mimetype: imageUpload._file.type,
+      handle: imageUpload.handle
+    }
+  }
+
+  if (files.document) {
+    const document = files.document
+    const documentHandle = bookToUpdate?.document.handle
+    const documentRequest = storage.upload(document?.data, {}, { filename: document.md5 })
+    const documentDeleteRequest = storage.remove(<string>documentHandle)
+    const [documentUpload] = await Promise.all([documentRequest, documentDeleteRequest])
+    book.document = {
+      url: documentUpload.url,
+      name: documentUpload._file.name,
+      mimetype: documentUpload._file.type,
+      handle: documentUpload.handle
+    }
+  }
+
   return await bookRepository.update(id, book)
 }
 

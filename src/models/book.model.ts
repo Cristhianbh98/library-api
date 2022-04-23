@@ -7,7 +7,7 @@ interface IBookFile {
   handle: string
 }
 
-interface IBook {
+export interface IBook {
   title: string,
   description: string,
   code: string,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { trimString } from '../helpers/validation.helper'
 import bookService from '../servicies/book.service'
+import { IBook } from '../models/book.model'
 
 async function index (req: Request, res: Response) {
   const books = await bookService.index()
@@ -57,13 +58,56 @@ async function store (req: Request, res: Response, next: NextFunction) {
 }
 
 async function update (req: Request, res: Response, next: NextFunction) {
-  return res.send('This is the update function')
+  const { currentUser } = res.locals
+  const { id } = req.params
+  const book = <IBook> await bookService.show(id)
+  const canUpdate = book?.user === currentUser.id || currentUser?.role === 'admin'
+
+  if (!canUpdate) {
+    const err = new Error('JsonWebTokenError')
+    err.message = 'You do not have the permisson'
+    return next(err)
+  }
+
+  const { title, description, code, category } = req.body
+  const image = <any>req.files?.image
+  const document = <any>req.files?.document
+
+  if (image && !/^image\/(jpeg|png)$/.test(image?.mimetype)) {
+    const e = new Error()
+    e.name = 'ValidationError'
+    e.message = 'Image extension not supported'
+    return next(e)
+  }
+
+  if (document && document?.mimetype !== 'application/pdf') {
+    const e = new Error()
+    e.name = 'ValidationError'
+    e.message = 'Document only support: application/pdf'
+    return next(e)
+  }
+
+  const files = { image, document }
+
+  const updateData = {
+    title: trimString(title),
+    description: trimString(description),
+    code: trimString(code),
+    category
+  }
+  try {
+    const bookUpdated = await bookService.update(id, updateData, files)
+    return res.send(bookUpdated)
+  } catch (e: any) {
+    next(e)
+  }
 }
 
 async function destroy (req: Request, res: Response, next: NextFunction) {
   const { currentUser } = res.locals
   const { id } = req.params
-  const canDelete = currentUser?.id === id || currentUser?.role === 'admin'
+  const book = <IBook> await bookService.show(id)
+  const canDelete = book?.user === currentUser.id || currentUser?.role === 'admin'
 
   if (!canDelete) {
     const err = new Error('JsonWebTokenError')

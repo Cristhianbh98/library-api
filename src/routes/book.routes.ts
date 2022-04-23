@@ -9,7 +9,7 @@ router.get('/:id', bookController.show)
 
 router.post('/', authMiddleware, bookController.store)
 
-router.put('/:id', bookController.update)
+router.put('/:id', authMiddleware, bookController.update)
 
 router.delete('/:id', authMiddleware, bookController.destroy)
 
