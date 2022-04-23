@@ -2,8 +2,12 @@ import { Router } from 'express'
 import userController from '../controllers/user.controller'
 import authMiddleware from '../middlewares/auth.middleware'
 import getUserMiddleware from '../middlewares/getUser.middleware'
+import favoriteRoutes from './favorite.routes'
 
 const router = Router()
+
+/* Favorite routes */
+router.use('/favorite', favoriteRoutes)
 
 router.get('/', getUserMiddleware, userController.index)
 router.get('/:id', getUserMiddleware, userController.show)
