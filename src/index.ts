@@ -1,12 +1,13 @@
-import app from './app'
 import mongoose from 'mongoose'
 import config from './config'
+import app from './app'
 
-/**
- * Start Express server.
- */
+async function init () {
+  /* Start database */
+  await mongoose.connect(config.MONGO_DB_URI)
+  console.log('  Mongodb connected correctly!')
 
-const startServer = () => {
+  /* Start express */
   app.listen(app.get('port'), () => {
     const port = app.get('port')
     const env = app.get('env')
@@ -15,9 +16,4 @@ const startServer = () => {
   })
 }
 
-mongoose.connect(config.MONGO_DB_URI)
-  .then(() => {
-    console.log('  Mongodb connected correctly!')
-    startServer()
-  })
-  .catch(e => console.log(e))
+init()
