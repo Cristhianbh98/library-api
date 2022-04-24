@@ -432,12 +432,88 @@ Ejemplo:
 
 **GET** `http://localhost:3000/api/v1/book`
 
+### Output
+
+Retorna un `array` de libros.
+
+Ejemplo:
+
+```
+[
+  {
+    "title": "nuevo titulo",
+    "description": "Esta es una novela de las mil y una noches, novela arabe cuento recomendado",
+    "code": "9706666737",
+    "category": {
+      "name": "Fantasía",
+      "description": "El género fantasía siempre ha sido uno de los más populares en la historia de la humanidad",
+      "createdAt": "2022-04-22T22:34:17.796Z",
+      "updatedAt": "2022-04-22T22:34:17.796Z",
+      "id": "62632d69e0c664c269e1779a"
+    },
+    "user": {
+      "username": "cristhian",
+      "email": "cristhianbacusoy@gmail.com",
+      "firstName": "Cristhian",
+      "lastName": "Bacusoy Holguín",
+      "role": "admin",
+      "createdAt": "2022-04-21T19:54:13.846Z",
+      "updatedAt": "2022-04-21T19:59:32.617Z",
+      "image": "https://www.gravatar.com/avatar/1cd7519b8bf5d532a4d7c6f68f89e566",
+      "id": "6261b66587c21335946b3260"
+    },
+    "createdAt": "2022-04-23T20:35:47.044Z",
+    "updatedAt": "2022-04-23T21:06:59.698Z",
+    "id": "62646323df606d1d20aea993",
+    "documentUrl": "https://cdn.filestackcontent.com/F8guD6opTCK7sSpo1tHy",
+    "imageUrl": "https://cdn.filestackcontent.com/apNsh3wZTUGWC2jo6tVj"
+  }
+]
+```
+
 </details>
 
 <details>
 <summary>Obtener un libro unico</summary>
 
 **GET** `http://localhost:3000/api/v1/book/:id`
+
+### Output
+
+Retorna el libro indicado.
+
+Ejemplo:
+
+```
+{
+  "title": "nuevo titulo",
+  "description": "Esta es una novela de las mil y una noches, novela arabe cuento recomendado",
+  "code": "9706666737",
+  "category": {
+    "name": "Fantasía",
+    "description": "El género fantasía siempre ha sido uno de los más populares en la historia de la humanidad",
+    "createdAt": "2022-04-22T22:34:17.796Z",
+    "updatedAt": "2022-04-22T22:34:17.796Z",
+    "id": "62632d69e0c664c269e1779a"
+  },
+  "user": {
+    "username": "cristhian",
+    "email": "cristhianbacusoy@gmail.com",
+    "firstName": "Cristhian",
+    "lastName": "Bacusoy Holguín",
+    "role": "admin",
+    "createdAt": "2022-04-21T19:54:13.846Z",
+    "updatedAt": "2022-04-21T19:59:32.617Z",
+    "image": "https://www.gravatar.com/avatar/1cd7519b8bf5d532a4d7c6f68f89e566",
+    "id": "6261b66587c21335946b3260"
+  },
+  "createdAt": "2022-04-23T20:35:47.044Z",
+  "updatedAt": "2022-04-23T21:06:59.698Z",
+  "id": "62646323df606d1d20aea993",
+  "documentUrl": "https://cdn.filestackcontent.com/F8guD6opTCK7sSpo1tHy",
+  "imageUrl": "https://cdn.filestackcontent.com/apNsh3wZTUGWC2jo6tVj"
+}
+```
 
 </details>
 
@@ -446,6 +522,43 @@ Ejemplo:
 
 **POST** `http://localhost:3000/api/v1/book`
 
+### Header
+
+`Authorization=Bearer token`
+
+### Input
+
+Para poder crear un libro se debe hacer mediante `form-data`. Los campos necesario son los siguiente:
+```
+title: String,
+description: String,
+code: String, unique
+category: ObjectID
+image: image/png || image/jpeg
+document: application/pdf
+```
+
+### Output
+
+Retorna el libro creado.
+
+Ejemplo:
+
+```
+{
+  "title": "nuevo titulo",
+  "description": "Esta es una novela de las mil y una noches, novela arabe cuento recomendado",
+  "code": "9706666737",
+  "category":"62632d69e0c664c269e1779a",
+  "user": "6261b66587c21335946b3260",
+  "createdAt": "2022-04-23T20:35:47.044Z",
+  "updatedAt": "2022-04-23T21:06:59.698Z",
+  "id": "62646323df606d1d20aea993",
+  "documentUrl": "https://cdn.filestackcontent.com/F8guD6opTCK7sSpo1tHy",
+  "imageUrl": "https://cdn.filestackcontent.com/apNsh3wZTUGWC2jo6tVj"
+}
+```
+
 </details>
 
 <details>
@@ -453,12 +566,32 @@ Ejemplo:
 
 **PUT** `http://localhost:3000/api/v1/book/:id`
 
+### Header
+
+`Authorization=Bearer token`
+
+Solo puedes actualizar si eres autor del libro o usuario admin.
+
+### Output
+
+Retorna errores si no se pudo actulizar el libro o el libro actualizado si la petición se proceso correctamente.
+
 </details>
 
 <details>
 <summary>Eliminar una libro</summary>
 
 **DELETE** `http://localhost:3000/api/v1/book/:id`
+
+### Header
+
+`Authorization=Bearer token`
+
+Solo puedes eliminar si eres autor del libro o usuario admin.
+
+### Output
+
+Retorna errores si no se pudo eliminar el libro o un mensaje de exito.
 
 </details>
 
