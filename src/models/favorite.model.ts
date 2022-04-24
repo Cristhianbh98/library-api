@@ -9,7 +9,8 @@ const definition: SchemaDefinition<IFavorite> = {
   user: {
     type: Schema.Types.ObjectId,
     unique: true,
-    required: true
+    required: true,
+    ref: 'user'
   },
   books: [{
     type: Schema.Types.ObjectId,

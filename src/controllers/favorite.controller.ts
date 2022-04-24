@@ -4,7 +4,7 @@ import { IFavorite } from '../models/favorite.model'
 
 async function list (req: Request, res: Response, next: NextFunction) {
   const { id } = res.locals.currentUser
-  let favorite = await favoriteService.show(id)
+  let favorite = await favoriteService.list(id)
   if (!favorite) favorite = await favoriteService.store({ user: id, books: [] })
   return res.send(favorite)
 }
