@@ -23,6 +23,14 @@ async function add (req: Request, res: Response, next: NextFunction) {
       next(e)
     }
   } else {
+    const index = favorite.books.indexOf(bookId)
+
+    if (index < 0) {
+      const err = new Error()
+      err.message = 'You did have that book in favorites before'
+      return next(err)
+    }
+
     const favoriteData: IFavorite = {
       user: favorite.user,
       books: favorite.books.concat(bookId)
