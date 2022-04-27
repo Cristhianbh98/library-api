@@ -518,7 +518,7 @@ Ejemplo:
 </details>
 
 <details>
-<summary>Crear una libro</summary>
+<summary>Crear un libro</summary>
 
 **POST** `http://localhost:3000/api/v1/book`
 
