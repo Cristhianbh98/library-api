@@ -11,8 +11,8 @@ const app = express()
 
 // Express configuration
 app.set('port', config.PORT)
-app.use(express.json())
 app.use(cors())
+app.use(express.json())
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, '../public')))
